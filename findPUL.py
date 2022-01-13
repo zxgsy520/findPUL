@@ -136,7 +136,7 @@ cp {prefix}.pul.m6 {prefix}.pul.out {prefix}.pul.tsv {prefix}.stat_pul.tsv {out_
 
     join_task.set_upstream(*tasks)
 
-    return tasks, join_task
+    return tasks, join_task, os.path.join(work_dir, "%s.stat_pul.tsv" % prefix)
 
 
 def create_sus_task(proteins, prefix, evalue, coverage, threads, job_type,
@@ -165,18 +165,17 @@ time blastp -query {{proteins}} -db {db} \\
     )
 
     join_task = Task(
-        id="merge_pul",
+        id="merge_sus",
         work_dir=work_dir,
         type=job_type,
         option="-pe smp 1 %s" % QUEUE,
         script="""
-cat {id}*/*.pul.m6 > {prefix}.sus.m6
+cat {id}*/*.sus.m6 > {prefix}.sus.m6
 time {script}/blast_filter.py {prefix}.sus.m6 \\
   --outfmt std qlen slen stitle --out qseqid sseqid qstart qend stitle evalue bitscore \\
   --min_qcov {coverage} --min_scov 0 --evalue {evalue} --best >{prefix}.sus.out
-{script}/pulproc.py {prefix}.sus.out \\
-  -d {db}.txt >{prefix}.pul.tsv 2>{prefix}.stat_pul.tsv
-cp {prefix}.pul.m6 {prefix}.pul.out {prefix}.pul.tsv {prefix}.stat_pul.tsv {out_dir}
+{script}/susproc.py {prefix}.sus.out >{prefix}.stat_sus.tsv
+cp {prefix}.sus.m6 {prefix}.sus.out {prefix}.stat_sus.tsv {out_dir}
 """.format(id=id,
            db=PUL_DB,
            prefix=prefix,
@@ -188,7 +187,27 @@ cp {prefix}.pul.m6 {prefix}.pul.out {prefix}.pul.tsv {prefix}.stat_pul.tsv {out_
 
     join_task.set_upstream(*tasks)
 
-    return tasks, join_task
+    return tasks, join_task, os.path.join(work_dir, "%s.stat_pul.tsv" % prefix)
+
+
+def create_merge_task(cazy, pul, sus, job_type, work_dir="", out_dir=""):
+
+    task = Task(
+        id="merge_puldb",
+        work_dir=work_dir,
+        type=job_type,
+        option="-pe smp 1 %s" % QUEUE,
+        script="""
+python {script}/merge_puldb.py {pul} \\
+  --cazy {cazy} --sus {sus} >{prefix}.merge_puldb.tsv
+python {script}/find_pul.py {prefix}.merge_puldb.tsv --gap 4 --minegene 2 --gaps 3 >{prefix}.predict.pul.xls
+cp {prefix}.merge_puldb.tsv {prefix}.predict.pul.xls {out_dir}
+""".format(script=SCRIPTS,
+           prefix=prefix,
+           out_dir=out_dir)
+    )
+
+    return tasks 
 
 
 def run_findpul(protein, prefix, evalue, coverage, threads,
@@ -222,7 +241,7 @@ def run_findpul(protein, prefix, evalue, coverage, threads,
     dag.add_task(*cazy_tasks)
     dag.add_task(cazy_join)
 
-    pul_tasks, pul_join = create_pul_task(
+    pul_tasks, pul_join, pul_stat = create_pul_task(
         proteins=proteins,
         prefix=prefix,
         evalue=evalue,
@@ -235,7 +254,7 @@ def run_findpul(protein, prefix, evalue, coverage, threads,
     dag.add_task(*pul_tasks)
     dag.add_task(pul_join)
 
-    sus_tasks, sus_join = create_sus_task(
+    sus_tasks, sus_join, sus_stat = create_sus_task(
         proteins=proteins,
         prefix=prefix,
         evalue=evalue,
@@ -247,6 +266,19 @@ def run_findpul(protein, prefix, evalue, coverage, threads,
     )
     dag.add_task(*sus_tasks)
     dag.add_task(sus_join)
+
+    merge_task = create_merge_task(
+        cazy=cazy_stat,
+        pul=pul_stat,
+        sus=sus_stat,
+        job_type=job_type,
+        work_dir=work_dir,
+        out_dir=out_dir
+    )
+    merge_task.set_upstream(cazy_join)
+    merge_task.set_upstream(pul_join)
+    merge_task.set_upstream(sus_join)
+    dag.add_task(merge_task)
 
     do_dag(dag, concurrent_tasks=concurrent, refresh_time=refresh)
 

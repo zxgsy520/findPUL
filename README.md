@@ -19,4 +19,8 @@ Database
 * * SusE-F protein
   * [PF16411](http://pfam.xfam.org/family/PF16411)
 * [DBCAN-PUL](https://bcb.unl.edu/dbcan_pul/Webserver/static/DBCAN-PUL/):polysaccharide utilization loci
+* [CAZy](http://www.cazy.org/)
+  * [CAZydb](https://bcb.unl.edu/dbCAN2/download/Databases/)
+  * [SLH](https://www.ebi.ac.uk/interpro/entry/IPR001119)
+  * [Cohesin](https://www.ebi.ac.uk/interpro/entry/IPR002102)
   

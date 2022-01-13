@@ -18,4 +18,5 @@ Database
   * [PF14292](http://pfam.xfam.org/family/PF14292)
 * * SusE-F protein
   * [PF16411](http://pfam.xfam.org/family/PF16411)
+* [DBCAN-PUL](https://bcb.unl.edu/dbcan_pul/Webserver/static/DBCAN-PUL/):polysaccharide utilization loci
   

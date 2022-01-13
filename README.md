@@ -3,7 +3,7 @@ Polysaccharide Utilization Loci Prediction
 
 Database
 -----------
-* [pfam](http://pfam.xfam.org/)
+* [pfam](http://pfam.xfam.org/) and [TIGRFAMs](http://tigrfams.jcvi.org/cgi-bin/index.cgi)
 * * SusC protein
   * [PF00953](http://pfam.xfam.org/family/PF00953)
   * [PF07715](http://pfam.xfam.org/family/PF07715)

@@ -6,6 +6,8 @@ Polysaccharide Utilization Loci Prediction
 * Three-party python package
   * [matplotlib](https://matplotlib.org/)
   * [numpy](https://numpy.org/doc/stable/index.html)
+  * [DAGflow](https://github.com/FlyPythons/DAGflow)
+* [blast+](https://ftp.ncbi.nih.gov/blast/executables/LATEST/)
 
 Database
 -----------

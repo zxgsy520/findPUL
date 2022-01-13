@@ -5,7 +5,10 @@ Database
 -----------
 * [pfam](http://pfam.xfam.org/)
 * * SusC protein
-  * [PF07980](http://pfam.xfam.org/family/PF07980)
+  * [PF00953](http://pfam.xfam.org/family/PF00953)
+  * [PF07715](http://pfam.xfam.org/family/PF07715)
+  * [PF13715](http://pfam.xfam.org/family/PF13715)
+  * [TIGR04056](https://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/)
 * * SusD protein
   * [PF07980](http://pfam.xfam.org/family/PF07980)
   * [PF12741](http://pfam.xfam.org/family/PF12741)

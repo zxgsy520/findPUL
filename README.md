@@ -1,6 +1,12 @@
 # findPUL
 Polysaccharide Utilization Loci Prediction
 
+## Requirements
+* [Python](https://www.python.org/)
+* Three-party python package
+  * [matplotlib](https://matplotlib.org/)
+  * [numpy](https://numpy.org/doc/stable/index.html)
+
 Database
 -----------
 * [pfam](http://pfam.xfam.org/) and [TIGRFAMs](http://tigrfams.jcvi.org/cgi-bin/index.cgi)

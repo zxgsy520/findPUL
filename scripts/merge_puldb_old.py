@@ -50,8 +50,7 @@ def read_cazy(file):
         type = list(set(line[3].split(";")))
         if ("GH" not in type) and ("CE" not in type):
             continue
-        #r[line[0]] = ";".join(type)
-        r[line[0]] = line[2]
+        r[line[0]] = ";".join(type)
 
     return r
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
 library(grid)
+library(circlize)
 library(ComplexHeatmap)
 options(bitmapType='cairo')
 
@@ -50,8 +51,10 @@ if(columns<=4) {
 pdf(paste(prefix, ".pdf", sep=""), width=widths, height=heights)
 a <- dev.cur()
 png(paste(prefix, ".png", sep=""), width=200, height=600)
+
+format <- colorRamp2(seq(min(data), max(data), length=3), c("blue", "#EEEEEE", "red"), space="RGB")
 dev.control("enable")
-Heatmap(data, name=" ", show_column_dend=FALSE)
+Heatmap(data, name=" ", col=format, show_column_dend=FALSE)
 dev.copy(which=a)
 dev.off()
 dev.off()
